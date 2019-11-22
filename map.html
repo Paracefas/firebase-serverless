@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--[if lt IE 9 ]><html class="no-js oldie" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+ <style>
+        #mapid { 
+            height: 100%;
+        }
+	 .good-green {
+            color: green;
+            font-weight: bold;
+        }
+        .sat-lgreen {
+            color: rgb(95, 212, 95);
+            font-weight: bold;
+        }
+        .mod-yellow {
+            color: yellow;
+            font-weight: bold;
+        }
+        .poor-orange {
+            color: orange;
+            font-weight: bold;
+        }
+        .vpoor-red {
+            color: red;
+            font-weight: bold;
+        }
+        .severe-violet {
+            color: rgb(141, 12, 141);
+            font-weight: bold;
+        }
+
+    </style>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+
+
+
+	
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+  
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>ASAQ</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+    <script src="js/pace.min.js"></script>
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+
+</head>
+
+<body>      
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+    <div  id="mapid"></div>
+     <script>
+        (function() 
+        {
+            const config = {
+                apiKey: "AIzaSyCKbRnof2QrXB-gqPNNokKN4uXk7gj3hR0",
+                authDomain: "shining-haiku-246200.firebaseapp.com",
+                databaseURL: "https://shining-haiku-246200.firebaseio.com",
+                projectId: "shining-haiku-246200",
+                storageBucket: "shining-haiku-246200.appspot.com",
+                messagingSenderId: "1053443476887",
+                appId: "1:1053443476887:web:8a61ecd92bd2bdcc5f88d2",
+                measurementId: "G-NDCZL7DTW0"
+            }
+
+            firebase.initializeApp(config)
+
+            const dbRef = firebase.database().ref();
+            const usersRef = dbRef.child('Sensors')
+
+            let mymap = L.map('mapid').setView([-38.00228, -57.55754], 15)
+                L.tileLayer('https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicGFyYWNlZmFzIiwiYSI6ImNrMm9kYnlyZzEyY3MzZG83aWRxZG15ZjYifQ.j2TdiQZUfjuri_2tg7FDBA', {
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.streets',
+                    accessToken: 'your.mapbox.access.token'
+                }).addTo(mymap)
+            
+            usersRef.on('value', _val => {
+                for(let x of _val.val())
+                    L.marker([x.Latitude, x.Longitude]).
+                        bindPopup(`<b>Fecha:</b> ${x.Date} at ${x.Time}<br>
+                                <b>CO:</b> ${x.CO}<br>
+                                <b>CO2:</b> ${x.CO2}<br>
+                                <b>CH4:</b> ${x.CH4}<br>
+                                <b>O3:</b> ${x.O3}<br>
+                                <b>Presión</b> ${x.Pressure}<br>
+                                <b>UV:</b> ${x.UV}<br>
+                                <b>Temperatura:</b> ${x.Temperature}<br>
+                                <b>Humedad:</b> ${x.Humidity}<br>`).openPopup().addTo(mymap)
+            })
+            
+        })()
+    </script>    
+</div>
+
+</body>
+
+</html>

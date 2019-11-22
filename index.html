@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!--[if lt IE 9 ]><html class="no-js oldie" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+ <style>
+        #mapid { 
+            width: 100%;
+            height: 600px;
+        }
+	 .good-green {
+            color: green;
+            font-weight: bold;
+        }
+        .sat-lgreen {
+            color: rgb(95, 212, 95);
+            font-weight: bold;
+        }
+        .mod-yellow {
+            color: yellow;
+            font-weight: bold;
+        }
+        .poor-orange {
+            color: orange;
+            font-weight: bold;
+        }
+        .vpoor-red {
+            color: red;
+            font-weight: bold;
+        }
+        .severe-violet {
+            color: rgb(141, 12, 141);
+            font-weight: bold;
+        }
+
+    </style>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+
+
+
+	
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+  
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>ASAQ</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+    <script src="js/pace.min.js"></script>
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+
+</head>
+
+<body id="top">
+
+    <!-- header
+    ================================================== -->
+    <header class="s-header">
+
+        <div class="">
+           <br>
+          <a class="site-logo" style="padding-left: 20px; "href="index.html">
+                <img src="images/logo.png" alt="Homepage" width="150" >
+            </a>
+        </div>
+
+        <nav class="header-nav">
+
+            <a href="#0" class="header-nav__close" title="close"><span>Close</span></a>
+
+            <div class="header-nav__content">
+             
+                
+                <ul class="header-nav__list">
+                    <li class="current"><a class="smoothscroll"  href="#home" title="home">Inicio</a></li>
+                    <li><a class="smoothscroll"  href="#" title="about">Datos Sensores</a></li>
+                    <li><a class="smoothscroll"  href="https://docs.google.com/document/d/1DB9_kXYFB33fMZV26D-XMhGBgB79ApBv8cooOstrAcY/edit" title="">Informe</a></li>
+                    <li><a class="smoothscroll"  href="https://www.facebook.com/tecnica2mardel/" title="works">Alumnos</a></li>
+                    <li><a class="smoothscroll"  href="" title="clients">Otros Proyectos</a></li>
+                    <li><a class="smoothscroll"  href="https://www.arduino.cc/" title="contact">Arduino</a></li>
+                </ul>
+
+
+            </div> <!-- end header-nav__content -->
+
+        </nav>  <!-- end header-nav -->
+
+        <a class="header-menu-toggle" href="#0">
+            <span class="header-menu-text">Menu</span>
+            <span class="header-menu-icon"></span>
+        </a>
+
+    </header> <!-- end s-header -->
+
+
+    <!-- home
+    ================================================== -->
+    <section id="home" class="s-home target-section" data-parallax="scroll" data-image-src="images/hero-bg.jpg" data-natural-width=3000 data-natural-height=2000 data-position-y=center>
+
+        <div class="overlay"></div>
+        <div class="shadow-overlay"></div>
+
+        <div class="home-content">
+
+            <div class="row home-content__main">
+
+                
+
+                <h1>
+                    Proyecto Final   <br>
+                   Escuela Secundaria Tecnica N°2 <br>
+                     <br>
+                   
+                </h1>
+
+               
+
+            </div>
+
+        </div> <!-- end home-content -->
+
+
+      
+        <!-- end home-social -->
+
+    </section> <!-- end s-home -->
+
+
+    <!-- about
+    ================================================== -->
+<section id='about' class="s-about">
+      <div class="container">
+      <h1 class="display-2 text-center">Puntos de Interes</h1>
+      
+
+      <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+    <div  id="mapid"></div>
+     <script>
+        (function() 
+        {
+            const config = {
+                apiKey: "AIzaSyCKbRnof2QrXB-gqPNNokKN4uXk7gj3hR0",
+                authDomain: "shining-haiku-246200.firebaseapp.com",
+                databaseURL: "https://shining-haiku-246200.firebaseio.com",
+                projectId: "shining-haiku-246200",
+                storageBucket: "shining-haiku-246200.appspot.com",
+                messagingSenderId: "1053443476887",
+                appId: "1:1053443476887:web:8a61ecd92bd2bdcc5f88d2",
+                measurementId: "G-NDCZL7DTW0"
+            }
+
+            firebase.initializeApp(config)
+
+            const dbRef = firebase.database().ref();
+            const usersRef = dbRef.child('Sensors')
+
+            let mymap = L.map('mapid').setView([-38.00228, -57.55754], 15)
+                L.tileLayer('https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicGFyYWNlZmFzIiwiYSI6ImNrMm9kYnlyZzEyY3MzZG83aWRxZG15ZjYifQ.j2TdiQZUfjuri_2tg7FDBA', {
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.streets',
+                    accessToken: 'your.mapbox.access.token'
+                }).addTo(mymap)
+            
+            usersRef.on('value', _val => {
+                for(let x of _val.val())
+                    L.marker([x.Latitude, x.Longitude]).
+                        bindPopup(`<b>Fecha:</b> ${x.Date} at ${x.Time}<br>
+                                <b>CO:</b> ${x.CO}<br>
+                                <b>CO2:</b> ${x.CO2}<br>
+                                <b>CH4:</b> ${x.CH4}<br>
+                                <b>O3:</b> ${x.O3}<br>
+                                <b>Presión</b> ${x.Pressure}<br>
+                                <b>UV:</b> ${x.UV}<br>
+                                <b>Temperatura:</b> ${x.Temperature}<br>
+                                <b>Humedad:</b> ${x.Humidity}<br>`).openPopup().addTo(mymap)
+            })
+            
+        })()
+    </script>    
+</div>
+    </section> <!-- end s-about -->
+
+
+    <!-- services
+    ================================================== -->
+    <section id='services' class="s-services">
+
+        <div class="row section-header has-bottom-sep" data-aos="fade-up">
+            <div class="col-full">
+                <h3 class="subhead">Sensores</h3>
+                <h1 class="display-2">Indice de Calidad de Aire</h1>
+            </div>
+        </div> <!-- end section-header -->
+
+        <div class="row services-list block-1-2 block-tab-full">
+
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="icon-paint-brush"></i>
+                </div>
+                <div class="service-text">
+                    <h3 class="h2">Monóxido de Carbono</h3>
+                    <p> <b>Índices:</b><br>
+                        <span class="good-green">Bueno</span><span>: 0-1.0</span><br> 
+                        <span class="sat-lgreen">Satisfactorio</span><span>: 1.1-2.0</span><br>
+                        <span class="mod-yellow">Moderado</span><span>: 2.1-10</span><br>
+                        <span class="poor-orange">Malo</span><span>: 10.1-17</span><br>
+                        <span class="vpoor-red">Muy malo</span><span>: 17.1-34</span><br>
+                        <span class="severe-violet">Severo</span><span>: +34</span><br>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="icon-group"></i>
+                </div>
+                <div class="service-text">
+                    <h3 class="h2">Dióxido de Carbono</h3>
+                    <p><b>Índices:</b><br>
+                        <span class="good-green">Bueno</span><span>: 0-1.0</span><br> 
+                        <span class="sat-lgreen">Satisfactorio</span><span>: 1.1-2.0</span><br>
+                        <span class="mod-yellow">Moderado</span><span>: 2.1-10</span><br>
+                        <span class="poor-orange">Malo</span><span>: 10.1-17</span><br>
+                        <span class="vpoor-red">Muy malo</span><span>: 17.1-34</span><br>
+                        <span class="severe-violet">Severo</span><span>: +34</span><br>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="icon-megaphone"></i>
+                </div>  
+                <div class="service-text">
+                    <h3 class="h2">Ozono</h3>
+                    <p><b>Índices:</b><br>
+                        <span class="good-green">Bueno</span><span>: 0-50</span><br> 
+                        <span class="sat-lgreen">Satisfactorio</span><span>: 51-100</span><br>
+                        <span class="mod-yellow">Moderado</span><span>: 101-168</span><br>
+                        <span class="poor-orange">Malo</span><span>: 169-208</span><br>
+                        <span class="vpoor-red">Muy malo</span><span>: 209-748</span><br>
+                        <span class="severe-violet">Severo</span><span>: +748</span><br>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="icon-earth"></i>
+                </div>
+                <div class="service-text">
+                    <h3 class="h2">Rayos Ultra Violeta</h3>
+                    <p><b>Índices:</b><br>
+                        <span class="good-green">Bueno</span><span>: 0-2</span><br> 
+                        <span class="sat-lgreen">Satisfactorio</span><span>: 3-5</span><br>
+                        <span class="mod-yellow">Moderado</span><span>: 6-7</span><br>
+                        <span class="poor-orange">Malo</span><span>: 8-10</span><br>
+                        <span class="vpoor-red">Muy malo</span><span>: 11</span><br>
+                        <span class="severe-violet">Severo</span><span>: +11</span><br>		
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="icon-cube"></i>
+                </div>
+                <div class="service-text">
+                    <h3 class="h2">Metano</h3>
+                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
+                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
+                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
+                    </p>
+                </div>
+            </div>
+    
+            <div class="col-block service-item" data-aos="fade-up">
+                <div class="service-icon"><i class="icon-lego-block"></i></div>
+                <div class="service-text">
+                    <h3 class="h2">Humedad</h3>
+                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
+                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
+                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
+                    </p>
+                </div>
+            </div>
+
+        </div> <!-- end services-list -->
+
+</section> <!-- end s-services -->
+
+
+    <!-- works
+    ================================================== -->
+   
+
+
+    <!-- footer
+    ================================================== -->
+    <footer>
+
+        <div class="row footer-main">
+
+
+            <div class="col-twelve">
+                <div class="text-center">
+                    <span>© Copyright  2019</span> 
+                    <span>EESTN°2 </span>	
+                </div>
+
+              
+            </div>
+
+        </div> <!-- end footer-bottom -->
+
+    </footer> <!-- end footer -->
+
+
+    <!-- photoswipe background
+    ================================================== -->
+    <div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+
+            <div class="pswp__container">
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            <div class="pswp__ui pswp__ui--hidden">
+                <div class="pswp__top-bar">
+                    <div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title=
+                    "Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title=
+                    "Zoom in/out"></button>
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                            <div class="pswp__preloader__cut">
+                                <div class="pswp__preloader__donut"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div>
+                </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button> <button class="pswp__button pswp__button--arrow--right" title=
+                "Next (arrow right)"></button>
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div> <!-- end photoSwipe background -->
+
+
+    <!-- preloader
+    ================================================== -->
+<div id="preloader">
+        <div id="loader">
+            <div class="line-scale-pulse-out">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Java Script
+    ================================================== -->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+
+</html>
